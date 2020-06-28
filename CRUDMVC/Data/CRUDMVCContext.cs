@@ -14,6 +14,8 @@ namespace CRUDMVC.Data
         {
         }
 
-        public DbSet<CRUDMVC.Models.Departamentos> Departamentos { get; set; }
+        public DbSet<Departamentos> Departamentos { get; set; }
+        public DbSet<Vendedor> Vendedor { get; set; }
+        public DbSet<RegistroDeVendas> RegistroDeVendas { get; set; }
     }
 }
