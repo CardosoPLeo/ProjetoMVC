@@ -10,7 +10,7 @@ namespace CRUDMVC.Data
 {
     public class SeedingService
     {
-        private CRUDMVCContext _context;
+        private readonly CRUDMVCContext _context;
 
         public SeedingService(CRUDMVCContext context)
         {

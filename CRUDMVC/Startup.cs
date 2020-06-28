@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using CRUDMVC.Data;
+using CRUDMVC.Services;
 
 namespace CRUDMVC
 {
@@ -41,6 +42,7 @@ namespace CRUDMVC
                 builder.MigrationsAssembly("CRUDMVC")));
 
             services.AddScoped<SeedingService>();
+            services.AddScoped<ServicoVendedor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
