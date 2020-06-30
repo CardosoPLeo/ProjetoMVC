@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using CRUDMVC.Models;
 using CRUDMVC.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,19 @@ namespace CRUDMVC.Controllers
         {
             var lista = _servicoVendedor.LocalizarTodos();
             return View(lista);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Vendedor vendedor)
+        {
+            _servicoVendedor.Insert(vendedor);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
