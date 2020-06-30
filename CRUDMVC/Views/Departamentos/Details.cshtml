@@ -1,10 +1,10 @@
 ﻿@model CRUDMVC.Models.Departamentos
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes";
 }
 
-<h2>Details</h2>
+    <h2>@ViewData["Title"]</h2>
 
 <div>
     <h4>Departamentos</h4>
@@ -19,6 +19,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Editar</a> |
+    <a asp-action="Index">Salvar</a>
 </div>
