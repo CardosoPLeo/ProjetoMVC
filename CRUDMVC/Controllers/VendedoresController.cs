@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using CRUDMVC.Models;
+using CRUDMVC.Models.ViewModels;
 using CRUDMVC.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +13,12 @@ namespace CRUDMVC.Controllers
     public class VendedoresController : Controller
     {
         private readonly ServicoVendedor _servicoVendedor;
+        private readonly ServicoDepartamento _servicoDepartamento;
 
-        public VendedoresController(ServicoVendedor servicoVendedor)
+        public VendedoresController(ServicoVendedor servicoVendedor, ServicoDepartamento servicoDepartamento)
         {
             _servicoVendedor = servicoVendedor;
+            _servicoDepartamento = servicoDepartamento; 
         }
 
         public IActionResult Index()
@@ -26,7 +29,9 @@ namespace CRUDMVC.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var departamentos = _servicoDepartamento.LocalizarTodos();
+            var viewModel = new VendedorFormViewModel {Departamentos = departamentos };
+            return View(viewModel);
         }
 
         [HttpPost]
