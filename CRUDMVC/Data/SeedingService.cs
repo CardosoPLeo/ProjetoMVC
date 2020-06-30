@@ -31,7 +31,7 @@ namespace CRUDMVC.Data
             Departamentos dep3 = new Departamentos(3, "Games");
             Departamentos dep4 = new Departamentos {Id = 4, Nome = "Celulares" };
 
-            Vendedor vnd1 = new Vendedor(1, "Bob 1", "bob@gmail.com", new DateTime(1988, 4, 1), 1000.0, dep1);
+            Vendedor vnd1 = new Vendedor(1, "Bob Brown", "bob@gmail.com", new DateTime(1988, 4, 1), 1000.0, dep1);
           
 
             RegistroDeVendas rg = new RegistroDeVendas(1, new DateTime(2020,6, 28), 5000.0, StatusDaVenda.Faturado, vnd1);

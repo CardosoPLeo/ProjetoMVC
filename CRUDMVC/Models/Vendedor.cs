@@ -13,6 +13,7 @@ namespace CRUDMVC.Models
         public DateTime DataAniversario { get; set; }
         public double SalarioBase { get; set; }
         public Departamentos Departamentos { get; set; }
+        public int DepartamentosId { get; set; }
         public ICollection<RegistroDeVendas> Vendas { get; set; } = new List<RegistroDeVendas>();
 
         public Vendedor()
@@ -46,5 +47,7 @@ namespace CRUDMVC.Models
         {
             return Vendas.Where(AdcionarVenda => AdcionarVenda.Data >= inicio && AdcionarVenda.Data <= fim).Sum(AdcionarVenda => AdcionarVenda.Quantia);
         }
+
+
     }
 }
