@@ -1,6 +1,8 @@
 ﻿using CRUDMVC.Migrations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace CRUDMVC.Models
@@ -8,9 +10,13 @@ namespace CRUDMVC.Models
     public class Vendedor
     {
         public int Id { get; set; }
-        public string  Nome { get; set; }
+        public string Nome { get; set; }
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString ="{0:dd/MM/yyyy}")]
         public DateTime DataAniversario { get; set; }
+        [DisplayFormat(DataFormatString ="{0:F2}")]
         public double SalarioBase { get; set; }
         public Departamentos Departamentos { get; set; }
         public int DepartamentosId { get; set; }
