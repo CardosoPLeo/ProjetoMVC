@@ -1,7 +1,10 @@
 ﻿using CRUDMVC.Models;
 using CRUDMVC.Models.ViewModels;
 using CRUDMVC.Services;
+using CRUDMVC.Services.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Data;
 
 namespace CRUDMVC.Controllers
 {
@@ -75,6 +78,49 @@ namespace CRUDMVC.Controllers
             }
 
             return View(obj);
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var obj = _servicoVendedor.FindById(id.Value);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            List<Departamentos> departamentos = _servicoDepartamento.LocalizarTodos();
+            VendedorFormViewModel viewModel = new VendedorFormViewModel { Vendedor = obj, Departamentos = departamentos };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Vendedor vendedor)
+        {
+            if (id != vendedor.Id)
+            {
+                return BadRequest();
+
+            }
+
+            try
+            {
+                _servicoVendedor.Update(vendedor);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (NotFoundException e)
+            {
+                throw new NotFoundException(e.Message);
+            }
+            catch (DBConcurrencyException)
+            {
+                return BadRequest();
+            }
         }
     }
 }

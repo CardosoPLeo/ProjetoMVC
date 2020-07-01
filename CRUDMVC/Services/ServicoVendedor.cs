@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace CRUDMVC.Services
 {
@@ -38,6 +39,24 @@ namespace CRUDMVC.Services
             _context.Vendedor.Remove(obj);
             _context.SaveChanges();
 
+        }
+
+        public void Update(Vendedor obj)
+        {
+            if (!_context.Vendedor.Any(x => x.Id == obj.Id))
+            {
+                throw new DllNotFoundException("Id não encontrado!");
+            }
+
+            try
+            {
+                _context.Update(obj);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                throw new DBConcurrencyException(e.Message);
+            }
         }
 
 
