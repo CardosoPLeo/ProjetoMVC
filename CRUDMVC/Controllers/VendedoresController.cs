@@ -3,8 +3,10 @@ using CRUDMVC.Models.ViewModels;
 using CRUDMVC.Services;
 using CRUDMVC.Services.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 
 namespace CRUDMVC.Controllers
 {
@@ -44,13 +46,13 @@ namespace CRUDMVC.Controllers
         {
             if(id == null) 
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não fornecido"});
             }
 
             var obj = _servicoVendedor.FindById(id.Value);
             if(obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
             }
 
             return View(obj);
@@ -68,13 +70,13 @@ namespace CRUDMVC.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não fornecido" });
             }
 
             var obj = _servicoVendedor.FindById(id.Value);
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
             }
 
             return View(obj);
@@ -84,13 +86,13 @@ namespace CRUDMVC.Controllers
         {
             if(id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não fornecedio" });
             }
 
             var obj = _servicoVendedor.FindById(id.Value);
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
             }
 
             List<Departamentos> departamentos = _servicoDepartamento.LocalizarTodos();
@@ -104,7 +106,7 @@ namespace CRUDMVC.Controllers
         {
             if (id != vendedor.Id)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = "Id não correspondem" });
 
             }
 
@@ -113,14 +115,22 @@ namespace CRUDMVC.Controllers
                 _servicoVendedor.Update(vendedor);
                 return RedirectToAction(nameof(Index));
             }
-            catch (NotFoundException e)
+            catch (ApplicationException e)
             {
-                throw new NotFoundException(e.Message);
+                return RedirectToAction(nameof(Error), new { e.Message });
             }
-            catch (DBConcurrencyException)
+           
+        }
+
+        //Ação de Erro verificar depois.
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
             {
-                return BadRequest();
-            }
+                Mensagem = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(viewModel);
         }
     }
 }
