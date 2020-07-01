@@ -3,7 +3,7 @@ using CRUDMVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRUDMVC.Services
 {
@@ -29,7 +29,7 @@ namespace CRUDMVC.Services
 
         public Vendedor FindById(int id)
         {
-            return _context.Vendedor.FirstOrDefault(obj => obj.Id == id);
+            return _context.Vendedor.Include(obj => obj.Departamentos).FirstOrDefault(obj => obj.Id == id);
         }
 
         public void Remove(int id)
