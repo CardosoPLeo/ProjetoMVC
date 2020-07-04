@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CRUDMVC.Data;
 using CRUDMVC.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRUDMVC.Services
 {
@@ -16,9 +17,9 @@ namespace CRUDMVC.Services
             _context = context;
         }
 
-        public List<Departamentos> LocalizarTodos()
+        public async Task <List<Departamentos>> LocalizarTodosAsync()
         {
-            return _context.Departamentos.OrderBy(x => x.Nome).ToList();
+            return await _context.Departamentos.OrderBy(x => x.Nome).ToListAsync();
         }
     }
 }

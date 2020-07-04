@@ -1,12 +1,13 @@
 ﻿using CRUDMVC.Models;
 using CRUDMVC.Models.ViewModels;
 using CRUDMVC.Services;
-using CRUDMVC.Services.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace CRUDMVC.Controllers
 {
@@ -18,69 +19,45 @@ namespace CRUDMVC.Controllers
         public VendedoresController(ServicoVendedor servicoVendedor, ServicoDepartamento servicoDepartamento)
         {
             _servicoVendedor = servicoVendedor;
-            _servicoDepartamento = servicoDepartamento; 
+            _servicoDepartamento = servicoDepartamento;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var lista = _servicoVendedor.LocalizarTodos();
+            var lista = await _servicoVendedor.LocalizarTodosAsync();
             return View(lista);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var departamentos = _servicoDepartamento.LocalizarTodos();
-            var viewModel = new VendedorFormViewModel {Departamentos = departamentos };
+            var departamentos = await _servicoDepartamento.LocalizarTodosAsync();
+            var viewModel = new VendedorFormViewModel { Departamentos = departamentos };
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Vendedor vendedor)
+        public async Task<IActionResult> Create(Vendedor vendedor)
         {
             if (!ModelState.IsValid)
             {
-                var departamentos = _servicoDepartamento.LocalizarTodos();
+                var departamentos = await _servicoDepartamento.LocalizarTodosAsync();
                 var viewModel = new VendedorFormViewModel { Vendedor = vendedor, Departamentos = departamentos };
                 return View(viewModel);
             }
 
-            _servicoVendedor.Insert(vendedor);
+            await _servicoVendedor.InsertAsync(vendedor);
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Delete(int? id)
-        {
-            if(id == null) 
-            {
-                return RedirectToAction(nameof(Error), new { message = "Id não fornecido"});
-            }
-
-            var obj = _servicoVendedor.FindById(id.Value);
-            if(obj == null)
-            {
-                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
-            }
-
-            return View(obj);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
-        {
-            _servicoVendedor.Remove(id);
-            return RedirectToAction(nameof(Index));
-        }
-
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não fornecido" });
             }
 
-            var obj = _servicoVendedor.FindById(id.Value);
+            var obj = await _servicoVendedor.FindByIdAsync(id.Value);
             if (obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
@@ -89,31 +66,55 @@ namespace CRUDMVC.Controllers
             return View(obj);
         }
 
-        public IActionResult Edit(int? id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
         {
-            if(id == null)
+            await _servicoVendedor.RemoveAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id não fornecedio" });
+                return RedirectToAction(nameof(Error), new { message = "Id não fornecido" });
             }
 
-            var obj = _servicoVendedor.FindById(id.Value);
+            var obj = await _servicoVendedor.FindByIdAsync(id.Value);
             if (obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
             }
 
-            List<Departamentos> departamentos = _servicoDepartamento.LocalizarTodos();
+            return View(obj);
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id não fornecedio" });
+            }
+
+            var obj = await _servicoVendedor.FindByIdAsync(id.Value);
+            if (obj == null)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
+            }
+
+            List<Departamentos> departamentos = await _servicoDepartamento.LocalizarTodosAsync();
             VendedorFormViewModel viewModel = new VendedorFormViewModel { Vendedor = obj, Departamentos = departamentos };
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Vendedor vendedor)
+        public async Task<IActionResult> Edit(int id, Vendedor vendedor)
         {
             if (!ModelState.IsValid)
             {
-                var departamentos = _servicoDepartamento.LocalizarTodos();
+                var departamentos = await _servicoDepartamento.LocalizarTodosAsync();
                 var viewModel = new VendedorFormViewModel { Vendedor = vendedor, Departamentos = departamentos };
                 return View(viewModel);
             }
@@ -126,14 +127,14 @@ namespace CRUDMVC.Controllers
 
             try
             {
-                _servicoVendedor.Update(vendedor);
+                await _servicoVendedor.UpdateAsync(vendedor);
                 return RedirectToAction(nameof(Index));
             }
             catch (ApplicationException e)
             {
                 return RedirectToAction(nameof(Error), new { e.Message });
             }
-           
+
         }
 
         //Ação de Erro verificar depois.
