@@ -1,6 +1,7 @@
 ﻿using CRUDMVC.Models;
 using CRUDMVC.Models.ViewModels;
 using CRUDMVC.Services;
+using CRUDMVC.Services.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -70,8 +71,15 @@ namespace CRUDMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await _servicoVendedor.RemoveAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _servicoVendedor.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (IntegridadeException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
         }
 
         public async Task<IActionResult> Details(int? id)
