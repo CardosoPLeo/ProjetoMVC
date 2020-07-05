@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Threading.Tasks;
 using CRUDMVC.Services.Exceptions;
-using Microsoft.CodeAnalysis.Differencing;
 
 namespace CRUDMVC.Services
 {
